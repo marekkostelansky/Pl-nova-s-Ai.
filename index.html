@@ -1529,6 +1529,7 @@ function daysInMonth(){let d=monthStart(),out=[];while(d<nextMonthStart()){out.p
 function addDays(d,n){let x=new Date(d);x.setDate(x.getDate()+n);return x}
 function key(pid,date){return pid+"|"+date}
 function getCell(pid,date){return currentPlan().cells[key(pid,date)]||null}
+function getCellAnyMonth(pid,date){const m=String(date).slice(0,7);const plan=state.plans&&state.plans[m];return plan?(plan.cells[key(pid,date)]||null):null}
 function setCell(pid,date,entry){currentPlan().cells[key(pid,date)]={code:entry.code||"V",note:entry.note||"",manual:!!entry.manual,locked:!!entry.locked,source:entry.source||"manual",absenceId:entry.absenceId||null}}
 function delCell(pid,date){delete currentPlan().cells[key(pid,date)]}
 function visibleCode(entry){return entry?.code||"V"}
@@ -1941,7 +1942,7 @@ syncRulesToInputs=function(){
   $("timeDay1").value=r.times.day1;$("timeDay2").value=r.times.day2;$("timeStDay").value=r.times.stDay;$("timeNight1").value=r.times.night1;$("timeNight2Week").value=r.times.night2Week;$("timeNight2Weekend").value=r.times.night2Weekend;$("timeStNight").value=r.times.stNight;
 };
 function isWorkDayForConsec(pid,date){
-  const e=getCell(pid,date); if(!e) return false;
+  const e=getCellAnyMonth(pid,date); if(!e) return false;
   const c=normalizeCode(e.code); return isWorkCode(c);
 }
 function consecutiveRunIfAssigned(pid,date){
@@ -1967,7 +1968,7 @@ function countRecentWork(pid,date,daysBack){
 function categoryCountsInWindow(pid,date,daysBack){
   let d=new Date(date+"T00:00:00"),day=0,night=0;
   for(let i=1;i<=daysBack;i++){
-    const x=ymd(addDays(d,-i)),e=getCell(pid,x); if(!e)continue;
+    const x=ymd(addDays(d,-i)),e=getCellAnyMonth(pid,x); if(!e)continue;
     const c=normalizeCode(e.code); if(!isWorkCode(c)||isA(c))continue;
     const iv=entryInterval(x,c); if(!iv)continue;
     if(iv.start.getHours()>=17||iv.end.getDate()!==iv.start.getDate())night++; else day++;
@@ -3189,6 +3190,9 @@ function candidateCheckV31(pid,date,code,{overtime=false,ignoreOwnRegular=false}
   const reasons=[],warnings=[];
   if(!roleMatchesServiceV31(p,code))reasons.push("nevhodná rola pre tento typ služby");
   if(absenceConflictV31(pid,date))reasons.push("má PN, DOV alebo CHV");
+  const coOccupantsV50=occupants(date,code).filter(oid=>oid!==pid);
+  const forbiddenWithV50=coOccupantsV50.find(oid=>isForbidden(pid,oid));
+  if(forbiddenWithV50)reasons.push(`zakázaná dvojica s ${person(forbiddenWithV50)?.name||"kolegom"} na tejto službe`);
   const newIv=entryInterval(date,code);
   if(!newIv)reasons.push("neplatný čas služby");
   if(reasons.length)return {ok:false,reasons,warnings};
