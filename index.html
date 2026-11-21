@@ -951,6 +951,51 @@ body.light-mode .exchangePickPanel{background:#fffffff2!important;color:#17212b!
 body.light-mode .exchangePickChoice{background:#f5f7fa!important}
 @media(max-width:560px){.exchangePickSummary{grid-template-columns:1fr}.exchangePickArrow{transform:rotate(90deg);text-align:center}}
 
+
+/* ===== v60 skin: nový vzhľad (iba vzhľad, funkcie nezmenené) ===== */
+:root{--bg:#0c1218;--top:#0c1218;--panel:#141c26;--panel2:#101720;--card:#141c26;--line:#243140;--text:#e9f0f7;--muted:#8fa2b6;--blue:#3b82f6;--blue2:#2f6fe0;--gold:#f2c76e;--green:#3ecf8e;--red:#ff6b6b;--amber:#ffbf47;--focus:#7db3ff}
+body.light-mode{--bg:#f1f4f8;--top:#fff;--panel:#fff;--panel2:#f5f7fa;--card:#fff;--line:#dde4ec;--text:#14202c;--muted:#5d6e80}
+body{background:radial-gradient(1200px 600px at 10% -10%,#16263a 0,transparent 60%),var(--bg);letter-spacing:.005em}
+body.light-mode{background:var(--bg)}
+header{background:color-mix(in srgb,var(--bg) 88%,transparent)!important;backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding:14px 20px 0}
+body.light-mode header{background:rgba(255,255,255,.9)!important}
+h1{font-size:21px;font-weight:800;letter-spacing:-.01em;display:flex;align-items:center;gap:10px}
+h1::before{content:"";width:26px;height:26px;border-radius:8px;background:linear-gradient(135deg,#3b82f6,#22d3ee);box-shadow:0 4px 14px #3b82f655;flex:none}
+.subtitle{margin-left:36px}
+nav{gap:2px;padding-top:12px;border-bottom:0}
+nav button{background:transparent!important;color:var(--muted);border:0;border-radius:10px 10px 0 0;padding:10px 14px;font-size:13.5px;font-weight:700;border-bottom:3px solid transparent}
+nav button:hover{color:var(--text);filter:none;background:color-mix(in srgb,var(--text) 6%,transparent)!important}
+nav button.active{color:var(--text);background:color-mix(in srgb,var(--blue) 14%,transparent)!important;border-bottom-color:var(--blue)}
+body.light-mode nav button{color:#5d6e80}body.light-mode nav button.active{color:#14202c}
+main{padding:18px 20px;max-width:1600px}
+.card{border-radius:14px;border:1px solid var(--line);box-shadow:0 1px 0 #ffffff08 inset,0 10px 30px #0000003d;background:var(--panel)}
+body.light-mode .card{box-shadow:0 2px 12px #1a2b3c14}
+.cardTitle h2,h2{font-size:17px;font-weight:800;letter-spacing:-.005em}
+button{border-radius:10px;font-weight:700;border:1px solid transparent;transition:transform .08s,filter .12s,background .12s}
+button:active{transform:translateY(1px)}
+button.secondary{background:color-mix(in srgb,var(--text) 9%,transparent);color:var(--text);border-color:var(--line)}
+button.good{background:#1f9d62}button.danger{background:#b4413f}
+input,select,textarea{border-radius:10px;background:var(--panel2)}
+.tableWrap{border-radius:12px;border:1px solid var(--line)}
+th{background:var(--panel2)!important;text-transform:none;font-size:12px;color:var(--muted)}
+td.cell{font-weight:700;font-size:13px;border-right-color:#ffffff10;border-bottom-color:#ffffff10}
+body.light-mode td.cell{border-right-color:#0000001a;border-bottom-color:#0000001a}
+.dateHead.weekend{background:color-mix(in srgb,var(--amber) 10%,var(--panel2))!important}
+.nameCol{font-weight:700}
+.legend span{border-radius:8px;font-weight:700;padding:4px 9px}
+.issueCard{border-radius:12px}
+.modal{border-radius:16px;box-shadow:0 30px 90px #000a}
+.pill{border-radius:8px}
+.toast{border-radius:12px}
+/* přehľad hore */
+.dash{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-bottom:14px}
+.dashTile{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:13px 15px;display:grid;gap:2px;cursor:pointer;position:relative;overflow:hidden}
+.dashTile::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--tc,var(--blue))}
+.dashTile b{font-size:26px;line-height:1.1;font-weight:800;font-variant-numeric:tabular-nums}
+.dashTile span{font-size:12px;color:var(--muted);font-weight:600}
+.dashTile.bad{--tc:var(--red)}.dashTile.good{--tc:var(--green)}.dashTile.warn{--tc:var(--amber)}
+.dashTile:hover{border-color:var(--tc,var(--blue))}
+@media(max-width:860px){header{padding:10px 12px 0}main{padding:12px}.subtitle{margin-left:0}}
 </style>
 </head>
 <body>
@@ -978,6 +1023,7 @@ body.light-mode .exchangePickChoice{background:#f5f7fa!important}
 </header>
 <main>
   <section id="tab-plan" class="tab active">
+    <div class="dash noPrint" id="dashBox"></div>
     <div class="card noPrint topControls">
       <div class="topPlan">
         <label>Mesiac <select id="monthSelect"></select></label>
@@ -5905,6 +5951,21 @@ attach=function(){
   $("importFileInput").onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>importStateV60(r.result,`Načítané zo súboru: ${f.name}`);r.readAsText(f);e.target.value=""};
 };
 
+
+/* přehľad hore (v60 skin) */
+function renderDashV60(){
+  const box=$("dashBox");if(!box)return;
+  const issues=validateAll(),crit=criticalIssueCount(issues),miss=missingCoverageV31().missingTotal;
+  const people=state.people.filter(roleFunded);
+  const outFund=people.filter(p=>{const t=totalWithCarry(p.id);return t<parseHM(p.min||state.rules.minFund)||t>parseHM(p.max||state.rules.maxFund)}).length;
+  const otMin=state.people.reduce((a,p)=>a+overtimeMinutesV31(p.id),0);
+  const abs=(state.absences||[]).filter(a=>a.from.slice(0,7)<=state.month&&a.to.slice(0,7)>=state.month).length;
+  const tile=(cls,val,lbl,tab)=>`<div class="dashTile ${cls}" data-go="${tab}"><b>${val}</b><span>${lbl}</span></div>`;
+  box.innerHTML=tile(crit?"bad":"good",crit,"závažných problémov","check")+tile(miss?"bad":"good",miss,"nepokrytých miest","repair")+tile(outFund?"warn":"good",outFund,"mimo fondu","summary")+tile("",fmtHM(otMin)+" h","nadčasov v mesiaci","summary")+tile("",abs,"neprítomností v mesiaci","absences");
+  box.querySelectorAll("[data-go]").forEach(t=>t.onclick=()=>activateTab(t.dataset.go));
+}
+const renderAllSkinBase=renderAll;
+renderAll=function(){renderAllSkinBase();renderDashV60()};
 /* hook pre automatické testy */
 window.__planovac={get state(){return state},set state(v){state=v},
   api:{validateAll:()=>validateAll(),personAvailable:(...a)=>personAvailable(...a),candidateCheck:(...a)=>candidateCheckV31(...a),setCell:(...a)=>setCell(...a),getCell:(...a)=>getCell(...a),
