@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Plánovač 5.0 – v47 opravený výber výmeny cez plachtu</title>
+<title>Plánovač 6.0</title>
 <style>
 :root{
   --bg:#0a0f16;--top:#070b10;--panel:#121922;--panel2:#0d131b;--card:#151e29;--line:#2a3544;
@@ -80,6 +80,7 @@ td.cell{cursor:pointer;font-weight:800;position:relative}.cell.locked::after{con
 .severityBadge.warning{color:#ffe6a6;background:#5b4219}
 .absRangeTag{display:inline-flex;gap:5px;align-items:center;border-radius:999px;background:#1a2634;border:1px solid var(--line);padding:3px 7px;font-size:11px;color:#d8e4f1}.issueCard h3{font-size:14px;margin:0 0 5px}.issueMeta{color:var(--muted);font-size:12px;margin-bottom:6px}.issueActions{display:flex;gap:8px;flex-wrap:wrap;margin-top:9px}.summaryTable{width:100%;min-width:760px}.summaryTable th,.summaryTable td{min-width:auto}
 .modalBackdrop{position:fixed;inset:0;background:#0009;display:none;align-items:center;justify-content:center;z-index:100;padding:14px}.modalBackdrop.show{display:flex}.modal{width:min(680px,100%);max-height:92vh;overflow:auto;background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:14px;box-shadow:0 24px 80px #000}.modalHeader{display:flex;justify-content:space-between;gap:10px;align-items:start;margin-bottom:10px}.modalHeader h2{font-size:17px;margin:0}.quickGrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:10px 0}.quickGrid button{padding:10px 7px;background:#223047}.quickGrid button.st{background:var(--s-stala)}.quickGrid button.abs{background:var(--s-abs)}.quickGrid button.good{background:var(--s-v)}.quickGrid button.clear{background:#4b2b2b}@media(max-width:520px){.quickGrid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.repVariant.recommended{border-color:var(--green);box-shadow:0 0 0 1px var(--green) inset}
 .toast{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);background:#101923;border:1px solid var(--line);color:var(--text);border-radius:999px;padding:10px 14px;display:none;z-index:150;box-shadow:0 12px 40px #0008}.toast.show{display:block}.muted{color:var(--muted)}.okText{color:var(--green)}.badText{color:var(--red)}.goldText{color:var(--gold)}
 
 /* Plachta v štýle starej verzie: meno ostáva vľavo, dni sú hneď za menom, F/P/Σ až na konci tabuľky. */
@@ -950,19 +951,65 @@ body.light-mode .exchangePickPanel{background:#fffffff2!important;color:#17212b!
 body.light-mode .exchangePickChoice{background:#f5f7fa!important}
 @media(max-width:560px){.exchangePickSummary{grid-template-columns:1fr}.exchangePickArrow{transform:rotate(90deg);text-align:center}}
 
+
+/* ===== v60 skin: nový vzhľad (iba vzhľad, funkcie nezmenené) ===== */
+:root{--bg:#0c1218;--top:#0c1218;--panel:#141c26;--panel2:#101720;--card:#141c26;--line:#243140;--text:#e9f0f7;--muted:#8fa2b6;--blue:#3b82f6;--blue2:#2f6fe0;--gold:#f2c76e;--green:#3ecf8e;--red:#ff6b6b;--amber:#ffbf47;--focus:#7db3ff}
+body.light-mode{--bg:#f1f4f8;--top:#fff;--panel:#fff;--panel2:#f5f7fa;--card:#fff;--line:#dde4ec;--text:#14202c;--muted:#5d6e80}
+body{background:radial-gradient(1200px 600px at 10% -10%,#16263a 0,transparent 60%),var(--bg);letter-spacing:.005em}
+body.light-mode{background:var(--bg)}
+header{background:color-mix(in srgb,var(--bg) 88%,transparent)!important;backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding:14px 20px 0}
+body.light-mode header{background:rgba(255,255,255,.9)!important}
+h1{font-size:21px;font-weight:800;letter-spacing:-.01em;display:flex;align-items:center;gap:10px}
+h1::before{content:"";width:26px;height:26px;border-radius:8px;background:linear-gradient(135deg,#3b82f6,#22d3ee);box-shadow:0 4px 14px #3b82f655;flex:none}
+.subtitle{margin-left:36px}
+nav{gap:2px;padding-top:12px;border-bottom:0}
+nav button{background:transparent!important;color:var(--muted);border:0;border-radius:10px 10px 0 0;padding:10px 14px;font-size:13.5px;font-weight:700;border-bottom:3px solid transparent}
+nav button:hover{color:var(--text);filter:none;background:color-mix(in srgb,var(--text) 6%,transparent)!important}
+nav button.active{color:var(--text);background:color-mix(in srgb,var(--blue) 14%,transparent)!important;border-bottom-color:var(--blue)}
+body.light-mode nav button{color:#5d6e80}body.light-mode nav button.active{color:#14202c}
+main{padding:18px 20px;max-width:1600px}
+.card{border-radius:14px;border:1px solid var(--line);box-shadow:0 1px 0 #ffffff08 inset,0 10px 30px #0000003d;background:var(--panel)}
+body.light-mode .card{box-shadow:0 2px 12px #1a2b3c14}
+.cardTitle h2,h2{font-size:17px;font-weight:800;letter-spacing:-.005em}
+button{border-radius:10px;font-weight:700;border:1px solid transparent;transition:transform .08s,filter .12s,background .12s}
+button:active{transform:translateY(1px)}
+button.secondary{background:color-mix(in srgb,var(--text) 9%,transparent);color:var(--text);border-color:var(--line)}
+button.good{background:#1f9d62}button.danger{background:#b4413f}
+input,select,textarea{border-radius:10px;background:var(--panel2)}
+.tableWrap{border-radius:12px;border:1px solid var(--line)}
+th{background:var(--panel2)!important;text-transform:none;font-size:12px;color:var(--muted)}
+td.cell{font-weight:700;font-size:13px;border-right-color:#ffffff10;border-bottom-color:#ffffff10}
+body.light-mode td.cell{border-right-color:#0000001a;border-bottom-color:#0000001a}
+.dateHead.weekend{background:color-mix(in srgb,var(--amber) 10%,var(--panel2))!important}
+.nameCol{font-weight:700}
+.legend span{border-radius:8px;font-weight:700;padding:4px 9px}
+.issueCard{border-radius:12px}
+.modal{border-radius:16px;box-shadow:0 30px 90px #000a}
+.pill{border-radius:8px}
+.toast{border-radius:12px}
+/* přehľad hore */
+.dash{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-bottom:14px}
+.dashTile{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:13px 15px;display:grid;gap:2px;cursor:pointer;position:relative;overflow:hidden}
+.dashTile::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--tc,var(--blue))}
+.dashTile b{font-size:26px;line-height:1.1;font-weight:800;font-variant-numeric:tabular-nums}
+.dashTile span{font-size:12px;color:var(--muted);font-weight:600}
+.dashTile.bad{--tc:var(--red)}.dashTile.good{--tc:var(--green)}.dashTile.warn{--tc:var(--amber)}
+.dashTile:hover{border-color:var(--tc,var(--blue))}
+@media(max-width:860px){header{padding:10px 12px 0}main{padding:12px}.subtitle{margin-left:0}}
 </style>
 </head>
 <body>
 <header>
   <div class="headerRow">
     <div>
-      <h1>Plánovač 5.0 v47</h1>
-      <p class="subtitle">Čistá verzia: plachta, parťáci, prenosy, pravidlá, kontrola a návrhy opráv.</p>
+      <h1>Plánovač 6.0</h1>
+      <p class="subtitle">Plachta, inteligentná oprava pri PN a výpadkoch, parťáci, prenosy, pravidlá a kontrola.</p>
     </div>
     <button id="themeToggleBtn" class="small secondary noPrint" title="Prepnúť tmavý/svetlý režim" style="white-space:nowrap">☀ Svetlý režim</button>
   </div>
   <nav class="noPrint">
     <button data-tab="plan" class="active">Plachta</button>
+    <button data-tab="repair">Oprava</button>
     <button data-tab="people">Ľudia</button>
     <button data-tab="pairs">Dvojice</button>
     <button data-tab="absences">PN/DOV</button>
@@ -976,6 +1023,7 @@ body.light-mode .exchangePickChoice{background:#f5f7fa!important}
 </header>
 <main>
   <section id="tab-plan" class="tab active">
+    <div class="dash noPrint" id="dashBox"></div>
     <div class="card noPrint topControls">
       <div class="topPlan">
         <label>Mesiac <select id="monthSelect"></select></label>
@@ -1126,6 +1174,24 @@ body.light-mode .exchangePickChoice{background:#f5f7fa!important}
       </div>
     </div>
     <div class="card"><div id="ruleWarnings" class="ruleWarnings"></div><button id="saveRulesBtn">Uložiť pravidlá</button></div>
+  </section>
+
+  <section id="tab-repair" class="tab">
+    <div class="card">
+      <div class="cardTitle"><h2>Oprava plánu</h2></div>
+      <p class="hint">Keď nastane PN, dovolenka alebo výpadok, plán sa nepregeneruje. Oprava iba doplní chýbajúce miesta a nechá všetky existujúce služby tak, ako sú.</p>
+      <div class="grid4">
+        <label>Člen <select id="repAbsPerson"></select></label>
+        <label>Typ <select id="repAbsType"><option>PN</option><option>DOV</option><option>CHV</option></select></label>
+        <label>Od <input id="repAbsFrom" type="date"></label>
+        <label>Do <input id="repAbsTo" type="date"></label>
+      </div>
+      <div class="grid2" style="margin-top:10px">
+        <label>Meniť až od dňa (skôr je všetko odpracované) <input id="repCutoff" type="date"></label>
+        <div class="actions" style="align-items:end;justify-content:flex-start"><button id="repAbsBtn" class="good">Zadať neprítomnosť a nájsť riešenie</button><button id="repFindBtn" class="secondary">Len nájsť riešenie pre nepokryté</button></div>
+      </div>
+    </div>
+    <div id="repResult"></div>
   </section>
 
   <section id="tab-summary" class="tab">
@@ -5462,6 +5528,452 @@ clearExchangeMarksV45X=function(){
     el.style.removeProperty("outline-offset");
   });
 };
+
+/* ===== v60 BEGIN: Plánovač 6.0 – opravy chýb O1–O9 a režim inteligentnej opravy ===== */
+
+/* ---------- O1/O2: oddych a 32 h aj cez prelom mesiaca ---------- */
+function neighborIntervalsV60(pid){
+  const out=[],ms=monthStart(),ne=nextMonthStart();
+  for(let i=1;i<=7;i++){
+    const date=ymd(addDays(ms,-i)),e=getCellAnyMonth(pid,date);
+    if(e&&isWorkCode(e.code)){const iv=entryInterval(date,e.code);if(iv)out.push({...iv,kind:"neighbor",code:e.code,date})}
+  }
+  for(let i=0;i<=2;i++){
+    const date=ymd(addDays(ne,i)),e=getCellAnyMonth(pid,date);
+    if(e&&isWorkCode(e.code)){const iv=entryInterval(date,e.code);if(iv)out.push({...iv,kind:"neighbor",code:e.code,date})}
+  }
+  return out;
+}
+/* prenesený úsek 00-x na 1. dni duplikuje celú službu z minulého mesiaca – vyhodí sa a ostane celá služba */
+function mergeNeighborsV60(arr){
+  const nb=neighborIntervalsV60(arr._pid),ms=monthStart().getTime();
+  const crossing=nb.filter(n=>n.end.getTime()>ms&&n.start.getTime()<ms);
+  let res=arr.filter(iv=>!(iv.start.getTime()===ms&&crossing.some(c=>c.end.getTime()===iv.end.getTime())));
+  return res.concat(nb);
+}
+const intervalsForV60Base=intervalsFor;
+intervalsFor=function(pid,extra){
+  const base=intervalsForV60Base(pid,null);base._pid=pid;
+  const arr=mergeNeighborsV60(base);
+  if(extra)arr.push(extra);
+  arr.sort((a,b)=>a.start-b.start);
+  return arr;
+};
+const allIntervalsAdvisorV60Base=allIntervalsAdvisorV31;
+allIntervalsAdvisorV31=function(pid,extra=null){
+  const base=allIntervalsAdvisorV60Base(pid,null);base._pid=pid;
+  const arr=mergeNeighborsV60(base);
+  if(extra)arr.push(extra);
+  return arr.sort((a,b)=>a.start-b.start);
+};
+/* jediná implementácia pravidla 32 h: okno 7 dní od polnoci, najdlhší súvislý úsek voľna >= rollingRest.
+   Okná sa kontrolujú aj keď začínajú v minulom mesiaci (O2). */
+function rollingOkV60(intervals){
+  const need=+state.rules.rollingRest||32,ms=monthStart(),len=daysInMonth().length;
+  const ivs=intervals.filter(x=>x.end>addDays(ms,-7)&&x.start<nextMonthStart());
+  for(let i=-6;i+6<len;i++){
+    const ws=addDays(ms,i),we=addDays(ws,7);
+    const busy=ivs.filter(x=>x.end>ws&&x.start<we)
+      .map(x=>({start:new Date(Math.max(x.start,ws)),end:new Date(Math.min(x.end,we))})).sort((a,b)=>a.start-b.start);
+    let cursor=ws.getTime(),best=0;
+    for(const b of busy){best=Math.max(best,(b.start.getTime()-cursor)/3600000);cursor=Math.max(cursor,b.end.getTime())}
+    best=Math.max(best,(we.getTime()-cursor)/3600000);
+    if(best<need)return false;
+  }
+  return true;
+}
+passesRolling=function(pid,iv){const p=person(pid);if(!roleFunded(p))return true;return rollingOkV60(intervalsFor(pid,iv))};
+passesRollingAdvisorV44=function(pid,iv){const p=person(pid);if(!roleFunded(p))return true;return rollingOkV60(allIntervalsAdvisorV31(pid,iv))};
+passesRollingFromIntervalsV49=function(base,extra){return rollingOkV60([...base,extra])};
+
+/* ---------- O3: prenos hodín a fond platia pre konkrétny mesiac ---------- */
+function snapshotCarryV60(m){state.monthCarry=state.monthCarry||{};const o={};for(const p of state.people)o[p.id]=p.carry||"+0,00";state.monthCarry[m]=o}
+function syncMonthCarryV60(){
+  state.monthCarry=state.monthCarry||{};
+  const cur=state.month,prev=state._carryMonth;
+  if(!prev||prev==="__skip__"){state._carryMonth=cur;snapshotCarryV60(cur);return}
+  if(prev===cur)return;
+  snapshotCarryV60(prev);
+  const saved=state.monthCarry[cur];
+  if(saved)for(const p of state.people)if(saved[p.id]!==undefined)p.carry=saved[p.id];
+  snapshotCarryV60(cur);
+  state._carryMonth=cur;saveState();
+}
+
+/* ---------- O4: generovanie neprepíše individuálny fond ---------- */
+const readRulesV60Base=readRulesInputsV4;
+readRulesInputsV4=function(applyFund){
+  const om=state.rules.minFund,oM=state.rules.maxFund;
+  readRulesV60Base(false);
+  if(applyFund)for(const p of state.people){
+    if(!roleFunded(p))continue;
+    if(!p.min||p.min===om)p.min=state.rules.minFund;
+    if(!p.max||p.max===oM)p.max=state.rules.maxFund;
+  }
+};
+
+/* ---------- O5: PN zruší dotknuté služby, ale upozorní na ne ---------- */
+function workSnapshotV60(pid){const o={};for(const [k,e] of Object.entries(currentPlan().cells)){if(k.startsWith(pid+"|")&&isWorkCode(e.code))o[k]=e.code}return o}
+function enterAbsenceV60(pid,type,from,to){
+  backup();
+  const before=workSnapshotV60(pid);
+  const abs={id:"abs"+Math.random().toString(36).slice(2,9),personId:pid,type,from:from<=to?from:to,to:from<=to?to:from};
+  state.absences=state.absences||[];state.absences.push(abs);
+  applyAbsenceRecord(abs);saveState();renderAll();
+  const removed=[];
+  for(const [k,code] of Object.entries(before)){
+    const e=currentPlan().cells[k];
+    if(!e||!isWorkCode(e.code)||normalizeCode(e.code)!==normalizeCode(code))removed.push({pid,date:k.slice(pid.length+1),code});
+  }
+  removed.sort((a,b)=>a.date<b.date?-1:1);
+  return removed;
+}
+function fmtDateV60(d){return d.slice(8)+"."+d.slice(5,7)+"."}
+addAbsence=function(){
+  const pid=$("absPerson").value,type=$("absType").value,from=$("absFrom").value,to=$("absTo").value;
+  if(!pid||!from||!to)return toast("Vyber člena, typ a dátumy.");
+  const removed=enterAbsenceV60(pid,type,from,to);
+  toast(`${type} pridané do plachty.`);
+  if(removed.length)showWarning([`Zrušené služby, ktoré treba obsadiť (${removed.length}):`,...removed.map(r=>`${fmtDateV60(r.date)} ${displayCode(r.code)}`),"Otvor záložku Oprava – nájde náhrady bez zásahu do ostatných služieb."],()=>activateTab("repair"));
+};
+
+/* ---------- O6: Poradca, oprava aj ručná úprava používajú tie isté pravidlá ---------- */
+const candidateCheckV60Base=candidateCheckV31;
+candidateCheckV31=function(pid,date,code,opts={}){
+  const p=person(pid),extra=[];
+  const iv=entryInterval(date,code);
+  if(p&&iv){const c=hardAbsenceConflict(pid,iv);if(c)extra.push(`služba zasahuje do ${c.type} ${c.from} – ${c.to}`)}
+  if(p&&iv&&!opts.overtime&&roleFunded(p)&&!passesMaxConsecutive(pid,date))extra.push(`prekročil by max. ${state.rules.maxConsec||4} služieb po sebe`);
+  const base=candidateCheckV60Base(pid,date,code,opts);
+  if(!extra.length)return base;
+  return {...base,ok:false,reasons:[...extra,...(base.reasons||[])]};
+};
+const isManualWarningV60Base=isManualWarningIssue;
+isManualWarningIssue=function(iss){
+  if(isManualWarningV60Base(iss))return true;
+  return (iss.type||"")==="rest"&&String(iss.title||"").includes("32 h");
+};
+/* ručná služba pridá stáleho parťáka iba ak parťák spĺňa pravidlá */
+commitManualCellWithPartner=function(pid,date,code,note,message){
+  backup();
+  setCell(pid,date,{code:displayCode(code),note:note||"",manual:true,locked:true,source:"manual"});
+  if(isWorkCode(code))state.ui.lastManualShift=displayCode(code);
+  let extra="";const norm=normalizeCode(code);
+  if(isPatrolService(norm)){
+    const partnerId=stablePartner(pid);
+    if(partnerId){
+      const already=getCell(partnerId,date),pn=person(partnerId)?.name||"";
+      if(!already){
+        const chk=candidateCheckV31(partnerId,date,norm,{overtime:false});
+        if(chk.ok){setCell(partnerId,date,{code:displayCode(norm),note:"",manual:true,locked:true,source:"manual"});extra=` Priradené aj parťákovi: ${pn}.`}
+        else extra=` (Parťák ${pn} nebol pridaný: ${chk.reasons.join(", ")}.)`;
+      }else if(normalizeCode(already.code)!==norm)extra=` (Parťák ${pn} mal už inú službu, nebol zmenený.)`;
+    }
+  }
+  closeModal("cellModal");
+  refreshAfterManualEdit((message||"Ručná zmena uložená. Plán sa negeneroval nanovo.")+extra);
+};
+
+/* ---------- nadčas pokrýva miesto v službe ---------- */
+function otPersonsV60(date,code){
+  const plan=state.overtime&&state.overtime[state.month];if(!plan)return [];
+  const norm=normalizeCode(code),out=[];
+  for(const k in plan){const i=k.indexOf("|");if(k.slice(i+1)!==date)continue;if(Array.isArray(plan[k])&&plan[k].some(x=>normalizeCode(x.code)===norm))out.push(k.slice(0,i))}
+  return out;
+}
+function coveredCountV60(date,code){const occ=occupants(date,code);return occ.length+otPersonsV60(date,code).filter(id=>!occ.includes(id)).length}
+dayOccupancyOk=function(date){const d=new Date(date+"T00:00:00");return reqsForDate(d).every(req=>{const c=coveredCountV60(date,req.code);return c===req.need||(c>req.need&&occupants(date,req.code).length<=req.need)})};
+missingCoverageV31=function(){
+  const rows=[];let missingTotal=0,maxDaily=0;
+  for(const d of daysInMonth()){
+    const date=ymd(d);let dayMissing=0;
+    for(const req of reqsForDate(d)){const miss=Math.max(0,req.need-coveredCountV60(date,req.code));if(miss){rows.push({date,code:req.code,missing:miss});dayMissing+=miss;missingTotal+=miss}}
+    maxDaily=Math.max(maxDaily,dayMissing);
+  }
+  return {rows,missingTotal,maxDaily};
+};
+const validateAllV60Base=validateAll;
+validateAll=function(){
+  const issues=validateAllV60Base(),covered=new Map();
+  for(const d of daysInMonth()){const date=ymd(d);for(const req of reqsForDate(d))covered.set(`${date} ${displayCode(normalizeCode(req.code))}`,{cov:coveredCountV60(date,req.code),need:req.need})}
+  return issues.filter(i=>{
+    if(i.type!=="missing")return true;
+    const c=covered.get(i.where);if(!c)return true;
+    if(c.cov>=c.need)return false;
+    i.why=`Požadované: ${c.need}, obsadené: ${c.cov}.`;return true;
+  });
+};
+
+/* ---------- O7: úplné „Vrátiť späť“, bez zbytočného zaplnenia úložiska (Z12) ---------- */
+backup=function(){
+  state.backups=state.backups||[];
+  state.backups.unshift({v:2,time:new Date().toISOString(),month:state.month,plan:clone(currentPlan()),overtime:clone(overtimePlanV31()),people:clone(state.people),pairs:clone(state.pairs),forbidden:clone(state.forbidden),forbiddenRoles:clone(state.forbiddenRoles||[]),absences:clone(state.absences||[]),rules:clone(state.rules),monthCarry:clone(state.monthCarry||{})});
+  state.backups=state.backups.slice(0,8);saveState();
+};
+undo=function(){
+  const b=state.backups?.shift();if(!b){toast("Nie je dostupná záloha.");return}
+  if(b.v===2){
+    state.month=b.month;state.plans[b.month]=b.plan;state.overtime=state.overtime||{};state.overtime[b.month]=b.overtime;
+    state.people=b.people;state.pairs=b.pairs;state.forbidden=b.forbidden;state.forbiddenRoles=b.forbiddenRoles;state.absences=b.absences;state.rules=b.rules;state.monthCarry=b.monthCarry;state._carryMonth=b.month;
+  }else{
+    state.month=b.month;state.plans=b.plans;state.people=b.people;if(b.pairs)state.pairs=b.pairs;if(b.forbidden)state.forbidden=b.forbidden;if(b.overtime)state.overtime=b.overtime;state._carryMonth=b.month;
+  }
+  saveState();syncControls();renderAll();toast("Vrátené späť.");
+};
+let storageWarnedV60=false;
+saveState=function(){
+  try{localStorage.setItem(STORAGE_KEY,JSON.stringify(state));return true}catch(e){}
+  try{state.backups=[];localStorage.setItem(STORAGE_KEY,JSON.stringify(state));toast("Úložisko bolo plné – zálohy „Späť“ sa vymazali.");return true}catch(e2){}
+  if(!storageWarnedV60){storageWarnedV60=true;try{showWarning(["POZOR: údaje sa nepodarilo uložiť do prehliadača (plné úložisko alebo zablokované ukladanie).","Okamžite stiahni zálohu: záložka Export → Stiahnuť súbor."])}catch(e3){}}
+  return false;
+};
+
+/* ---------- O8: úplný export do Excelu (prenesené úseky a nadčasy) ---------- */
+function exportPlanToExcelV60(){
+  const days=daysInMonth();
+  let html="<table><tr><th>Meno</th><th>Rola</th>"+days.map(d=>`<th>${pad(d.getDate())}.${pad(d.getMonth()+1)} ${DOW[d.getDay()]}</th>`).join("")+"<th>Fond</th><th>Prenos</th><th>Spolu</th><th>Nadčas</th></tr>";
+  for(const p of state.people){
+    html+=`<tr><td>${escapeHtml(p.name)}</td><td>${escapeHtml(ROLE_LABEL[p.role])}</td>`;
+    for(const d of days){
+      const date=ymd(d),e=getCell(p.id,date);
+      const parts=[];
+      if(e?.carryCode)parts.push("↩ "+displayCode(e.carryCode));
+      if(e&&!(e.carryCode&&normalizeCode(e.code)==="V"))parts.push(visibleCode(e));
+      else if(!e)parts.push("V");
+      for(const ot of overtimeEntriesV31(p.id,date))parts.push("N "+displayCode(ot.code));
+      html+=`<td>${escapeHtml(parts.join(" + "))}</td>`;
+    }
+    html+=roleFunded(p)?`<td>${fmtHM(totalWorkMinutes(p.id))}</td><td>${escapeHtml(p.carry||"+0,00")}</td><td>${fmtHM(totalWithCarry(p.id))}</td><td>${fmtHM(overtimeMinutesV31(p.id))}</td>`:`<td>—</td><td>—</td><td>—</td><td>${fmtHM(overtimeMinutesV31(p.id))}</td>`;
+    html+="</tr>";
+  }
+  html+="</table>";
+  downloadBlobV46(`plan_${state.month}.xls`,excelHtmlWrapV46("Plan "+state.month,html),"application/vnd.ms-excel");
+  toast("Excel s plánom bol stiahnutý.");
+}
+
+/* ---------- Z15: séria služieb po sebe aj z minulého mesiaca ---------- */
+consecutiveViolations=function(pid){
+  const out=[],max=+(state.rules.maxConsec||4);
+  let run=0,start=null;
+  for(let i=1;i<=14;i++){if(isWorkDayForConsec(pid,ymd(addDays(monthStart(),-i))))run++;else break}
+  if(run)start=ymd(addDays(monthStart(),-run));
+  for(const d of daysInMonth()){
+    const date=ymd(d);
+    if(isWorkDayForConsec(pid,date)){if(run===0)start=date;run++;if(run>max)out.push({start,date,run})}
+    else{run=0;start=null}
+  }
+  return out;
+};
+
+/* ---------- Z17: nový mesiac – ochrana pred omylom ---------- */
+const newMonthV60Base=newMonth;
+newMonth=function(){
+  syncMonthCarryV60();
+  const nm=+$("newMonthSelect").value,ny=+$("newYearInput").value,target=ny+"-"+pad(nm);
+  const {y,m}=monthParts(),next=(m===12?y+1:y)+"-"+pad(m===12?1:m+1);
+  if(target!==next&&!confirm(`Vytvárate ${target}, ale nasleduje ${next}. Prenos hodín a služieb vtedy nebude nadväzovať. Pokračovať?`))return;
+  const ex=state.plans[target];
+  if(ex&&Object.keys(ex.cells).length&&!confirm(`Plán ${target} už existuje. Prenos hodín sa prepočíta a prenesené služby sa doplnia. Pokračovať?`))return;
+  snapshotCarryV60(state.month);
+  state._carryMonth="__skip__";
+  newMonthV60Base();
+  state._carryMonth=state.month;snapshotCarryV60(state.month);saveState();
+};
+
+/* ---------- Z19/Z22: bezpečné mená a kontrola importu ---------- */
+function sanitizeNamesV60(){for(const p of state.people){p.name=String(p.name??"").replace(/[<>&"'`]/g,"").trim()||"Člen"}}
+const ensureV13DefaultsV60Base=ensureV13Defaults;
+ensureV13Defaults=function(){ensureV13DefaultsV60Base();sanitizeNamesV60();state.version="6.0-dev";state.monthCarry=state.monthCarry||{}};
+const savePersonEditV60Base=savePersonEdit;
+savePersonEdit=function(){savePersonEditV60Base();sanitizeNamesV60();saveState();renderAll()};
+function validImportV60(s){
+  try{
+    return !!(s&&typeof s==="object"&&Array.isArray(s.people)&&s.people.length&&s.people.every(p=>p&&typeof p.id==="string"&&typeof p.name==="string"&&["patrol","stala","helper","predskolak"].includes(p.role))
+      &&s.plans&&typeof s.plans==="object"&&s.rules&&typeof s.rules==="object"&&s.rules.needs&&s.rules.times&&/^\d{4}-\d{2}$/.test(s.month)&&Array.isArray(s.pairs)&&Array.isArray(s.forbidden));
+  }catch(e){return false}
+}
+function importStateV60(text,label){
+  let s;try{s=JSON.parse(text)}catch(e){return toast("Neplatný JSON.")}
+  if(!validImportV60(s))return toast("Súbor nie je platný export Plánovača – nič sa nezmenilo.");
+  backup();state=s;ensureV13Defaults();saveState();initControls();renderAll();toast(label||"Importované.");
+}
+
+/* ===== Režim inteligentnej opravy ===== */
+let repairCtxV60=null;
+function defaultCutoffV60(){const t=ymd(new Date());return t.slice(0,7)===state.month?t:state.month+"-01"}
+function slotsToFixV60(cutoff){
+  const out=[];
+  const cut=new Date(cutoff+"T00:00:00");
+  for(const r of missingCoverageV31().rows){const iv=entryInterval(r.date,r.code);if(!iv||iv.end<=cut)continue;for(let i=0;i<r.missing;i++)out.push({date:r.date,code:r.code})}
+  return out;
+}
+function candListV60(date,code,overtime){return candidatesV31(date,code,{overtime}).filter(x=>x.p.role!=="helper")}
+function reasonLabelV60(r){
+  r=String(r||"");
+  if(r.includes("PN, DOV")||r.includes("zasahuje do"))return "má PN/DOV/CHV";
+  if(r.includes("časový konflikt"))return "už má v tom čase službu";
+  if(r.includes("oddych"))return "nemá dosť oddychu";
+  if(r.includes("32 h"))return "chýbalo by mu 32 h voľna";
+  if(r.includes("po sebe"))return "prekročil by max. služieb po sebe";
+  if(r.includes("zakázaná"))return "zakázaná dvojica";
+  if(r.includes("rola"))return "nevhodná rola";
+  if(r.includes("fond"))return "prekročil by fond";
+  return r||"nevhodný";
+}
+function whyNobodyV60(date,code){
+  const cnt=new Map();
+  for(const p of state.people){
+    if(p.role==="helper")continue;
+    const c=candidateCheckV31(p.id,date,code,{overtime:true});
+    if(c.ok)continue;
+    const l=reasonLabelV60(c.reasons[0]);cnt.set(l,(cnt.get(l)||0)+1);
+  }
+  return [...cnt.entries()].sort((a,b)=>b[1]-a[1]).slice(0,4).map(([l,n])=>`${n}× ${l}`);
+}
+const REPAIR_STRATEGIES_V60=[
+  {id:"A",name:"Najmenej nadčasov",desc:"Najprv riadna služba ľuďom pod fondom, nadčas len ak inak nejde."},
+  {id:"C",name:"Najrovnomernejšie zaťaženie",desc:"Služby dostanú ľudia s najmenším súčtom hodín (fond + nadčas)."},
+  {id:"B",name:"Všetko nadčasom",desc:"Fondy ostanú nedotknuté, všetky chýbajúce miesta sa pokryjú nadčasom."}
+];
+function runVariantV60(strat,slots){
+  const savedCells=clone(currentPlan().cells),savedOt=clone(overtimePlanV31());
+  const steps=[],unc=[];
+  try{
+    const order=slots.map(s=>({s,n:candListV60(s.date,s.code,true).length})).sort((a,b)=>a.n-b.n||(a.s.date<b.s.date?-1:1)).map(x=>x.s);
+    for(const s of order){
+      const occ=occupants(s.date,s.code);
+      const bonus=x=>occ.some(o=>stablePartner(x.p.id)===o)?20:0;
+      let pick=null,kind=null;
+      const regs=strat.id==="B"?[]:candListV60(s.date,s.code,false);
+      if(regs.length){
+        kind="regular";
+        pick=strat.id==="C"?regs.slice().sort((a,b)=>(totalWithCarry(a.p.id)+overtimeMinutesV31(a.p.id))-(totalWithCarry(b.p.id)+overtimeMinutesV31(b.p.id)))[0]
+          :regs.slice().sort((a,b)=>(b.check.score+bonus(b))-(a.check.score+bonus(a)))[0];
+      }else{
+        const ots=candListV60(s.date,s.code,true);
+        if(ots.length){kind="overtime";pick=strat.id==="C"?ots.slice().sort((a,b)=>(totalWithCarry(a.p.id)+overtimeMinutesV31(a.p.id))-(totalWithCarry(b.p.id)+overtimeMinutesV31(b.p.id)))[0]
+          :ots.slice().sort((a,b)=>(b.check.score+bonus(b))-(a.check.score+bonus(a)))[0]}
+      }
+      if(!pick){unc.push({...s,why:whyNobodyV60(s.date,s.code)});continue}
+      const mins=minutesOverlapMonth(s.date,s.code);
+      steps.push({kind,pid:pick.p.id,name:pick.p.name,date:s.date,code:normalizeCode(s.code),mins,fundAfter:kind==="regular"?totalWithCarry(pick.p.id)+mins:null});
+      if(kind==="regular")setCell(pick.p.id,s.date,{code:displayCode(s.code),note:"Oprava: náhrada",manual:true,locked:true,source:"manual"});
+      else addOvertimeV31(pick.p.id,s.date,s.code,"Oprava: nadčas");
+    }
+  }finally{
+    currentPlan().cells=savedCells;state.overtime[state.month]=savedOt;
+  }
+  steps.sort((a,b)=>a.date<b.date?-1:a.date>b.date?1:0);
+  const otMin=steps.filter(x=>x.kind==="overtime").reduce((a,x)=>a+x.mins,0);
+  return {id:strat.id,name:strat.name,desc:strat.desc,steps,uncovered:unc,otMin,regular:steps.filter(x=>x.kind==="regular").length,ot:steps.filter(x=>x.kind==="overtime").length};
+}
+function computeVariantsV60(slots){
+  const vs=[],seen=new Set();
+  for(const st of REPAIR_STRATEGIES_V60){
+    const v=runVariantV60(st,slots),sig=v.steps.map(s=>s.kind+s.pid+s.date+s.code).join(",")+"|"+v.uncovered.length;
+    if(seen.has(sig)){const f=vs.find(x=>x.sig===sig);f.alsoNames.push(st.name);continue}
+    v.sig=sig;v.alsoNames=[];seen.add(sig);vs.push(v);
+  }
+  vs.sort((a,b)=>a.uncovered.length-b.uncovered.length||a.otMin-b.otMin||0);
+  return vs;
+}
+function applyVariantV60(v){
+  backup();
+  let done=0;const skipped=[];
+  for(const s of v.steps){
+    const chk=candidateCheckV31(s.pid,s.date,s.code,{overtime:s.kind==="overtime"});
+    if(!chk.ok){skipped.push(`${fmtDateV60(s.date)} ${displayCode(s.code)} – ${s.name}: ${chk.reasons[0]}`);continue}
+    if(s.kind==="overtime")addOvertimeV31(s.pid,s.date,s.code,"Oprava: nadčas");
+    else setCell(s.pid,s.date,{code:displayCode(s.code),note:"Oprava: náhrada",manual:true,locked:true,source:"manual"});
+    done++;
+  }
+  saveState();renderAll();
+  toast(`Oprava použitá: ${done} zmien.`);
+  if(skipped.length)showWarning(["Niektoré kroky sa už nedali vykonať (plán sa medzitým zmenil):",...skipped]);
+  runRepairV60(repairCtxV60?{removed:[],cutoff:repairCtxV60.cutoff}:{removed:[],cutoff:defaultCutoffV60()});
+}
+function runRepairV60(opts){
+  const cutoff=opts.cutoff||defaultCutoffV60();
+  const removed=(opts.removed||[]).map(r=>({...r,covered:coveredCountV60(r.date,r.code)>=(reqsForDate(new Date(r.date+"T00:00:00")).find(q=>normalizeCode(q.code)===normalizeCode(r.code))?.need??1)}));
+  const slots=slotsToFixV60(cutoff);
+  repairCtxV60={removed,cutoff,slots,variants:slots.length?computeVariantsV60(slots):[]};
+  renderRepairV60();
+}
+function renderRepairV60(){
+  const box=$("repResult");if(!box||!repairCtxV60)return;
+  const {removed,cutoff,slots,variants}=repairCtxV60;
+  let h="";
+  if(removed.length){
+    h+=`<div class="card"><h3 style="margin:0 0 6px">Dotknuté služby (${removed.length})</h3><div class="list">`+removed.map(r=>`<div class="row"><div class="rowText"><b>${fmtDateV60(r.date)} · ${escapeHtml(displayCode(r.code))}</b><small>${escapeHtml(person(r.pid)?.name||"")}</small></div><span class="pill ${r.covered?"green":"red"}">${r.covered?"už pokrytá":"nepokrytá"}</span></div>`).join("")+`</div></div>`;
+  }
+  if(!slots.length){
+    h+=`<div class="card"><h3 style="margin:0">Všetko je obsadené</h3><p class="hint">Od ${fmtDateV60(cutoff)} nechýba žiadna služba. Nič netreba meniť.</p></div>`;
+  }else{
+    h+=`<div class="card"><h3 style="margin:0 0 4px">Nepokryté miesta: ${slots.length}</h3><p class="hint">Od ${fmtDateV60(cutoff)} Nič z existujúceho plánu sa nemení – oprava iba dopĺňa chýbajúce miesta. Dni pred ${fmtDateV60(cutoff)}, odpracované služby, ručné zámky aj už zadané náhrady zostávajú.</p></div>`;
+    variants.forEach((v,i)=>{
+      const rec=i===0;
+      h+=`<div class="card repVariant ${rec?"recommended":""}"><div class="cardTitle"><h3 style="margin:0">${rec?"★ Odporúčané · ":""}${escapeHtml(v.name)}${v.alsoNames.length?` <small class="muted">(rovnaké riešenie: ${escapeHtml(v.alsoNames.join(", "))})</small>`:""}</h3></div>
+      <p class="hint">${escapeHtml(v.desc)}</p>
+      <div class="legend"><span>Pokrytých: ${v.steps.length}/${slots.length}</span><span>riadne služby: ${v.regular}</span><span>nadčasy: ${v.ot} (${fmtHM(v.otMin)} h)</span>${v.uncovered.length?`<span class="badText">nepokrytých: ${v.uncovered.length}</span>`:`<span class="okText">všetko pokryté</span>`}</div>
+      ${rec&&variants.length>1?`<p class="hint">Prečo odporúčam: ${v.uncovered.length===Math.max(...variants.map(x=>x.uncovered.length))&&variants.every(x=>x.uncovered.length===v.uncovered.length)?"pri rovnakom obsadení má najmenej nadčasových hodín.":"pokrýva najviac služieb."}</p>`:""}
+      <div class="tableWrap" style="max-height:260px"><table class="summaryTable" style="min-width:0"><tr><th>Dátum</th><th>Služba</th><th>Kto</th><th>Ako</th><th>Fond po</th></tr>${v.steps.map(s=>`<tr><td>${fmtDateV60(s.date)}</td><td>${escapeHtml(displayCode(s.code))}</td><td>${escapeHtml(s.name)}</td><td>${s.kind==="overtime"?"nadčas":"riadne"}</td><td>${s.fundAfter!==null?fmtHM(s.fundAfter)+" h":"—"}</td></tr>`).join("")}</table></div>
+      ${v.uncovered.length?`<div class="issueCard critical" style="margin-top:8px"><b>Nedá sa obsadiť bez porušenia pravidiel:</b>${v.uncovered.map(u=>`<div>${fmtDateV60(u.date)} ${escapeHtml(displayCode(u.code))} – ${escapeHtml(u.why.join(", ")||"nikto nie je dostupný")}</div>`).join("")}<small class="muted">Tieto miesta zostanú nepokryté, aby nevznikol neplatný plán.</small></div>`:""}
+      <div class="actions" style="margin-top:10px;justify-content:flex-start"><button class="good" data-rep-apply="${i}">Použiť túto možnosť</button></div></div>`;
+    });
+  }
+  box.innerHTML=h;
+  box.querySelectorAll("[data-rep-apply]").forEach(b=>b.onclick=()=>applyVariantV60(repairCtxV60.variants[+b.dataset.repApply]));
+}
+function fillRepairFormV60(){
+  const sel=$("repAbsPerson");if(!sel)return;
+  const sig=state.people.map(p=>p.id).join(",");
+  if(sel.dataset.sig!==sig){const old=sel.value;sel.innerHTML=state.people.map(p=>`<option value="${p.id}">${escapeHtml(p.name)}</option>`).join("");sel.dataset.sig=sig;if(state.people.some(p=>p.id===old))sel.value=old}
+  if(!$("repCutoff").value||$("repCutoff").dataset.month!==state.month){$("repCutoff").value=defaultCutoffV60();$("repCutoff").dataset.month=state.month}
+  if(!$("repAbsFrom").value)$("repAbsFrom").value=$("repCutoff").value;
+  if(!$("repAbsTo").value)$("repAbsTo").value=$("repCutoff").value;
+}
+const renderAllV60Base=renderAll;
+renderAll=function(){syncMonthCarryV60();renderAllV60Base();fillRepairFormV60()};
+suggestFixes=function(){activateTab("repair");runRepairV60({cutoff:$("repCutoff").value||defaultCutoffV60(),removed:[]})};
+const attachV60Base=attach;
+attach=function(){
+  attachV60Base();
+  $("repAbsBtn").onclick=()=>{
+    const pid=$("repAbsPerson").value,type=$("repAbsType").value,from=$("repAbsFrom").value,to=$("repAbsTo").value;
+    if(!pid||!from||!to)return toast("Vyber člena, typ a dátumy.");
+    const cutoff=$("repCutoff").value||defaultCutoffV60();
+    const removed=enterAbsenceV60(pid,type,from,to);
+    runRepairV60({cutoff,removed});
+  };
+  $("repFindBtn").onclick=()=>runRepairV60({cutoff:$("repCutoff").value||defaultCutoffV60(),removed:[]});
+  $("exportPlanXlsBtnV46").onclick=exportPlanToExcelV60;
+  $("importBtn").onclick=()=>importStateV60($("jsonBox").value);
+  $("importFileInput").onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>importStateV60(r.result,`Načítané zo súboru: ${f.name}`);r.readAsText(f);e.target.value=""};
+};
+
+
+/* přehľad hore (v60 skin) */
+function renderDashV60(){
+  const box=$("dashBox");if(!box)return;
+  const issues=validateAll(),crit=criticalIssueCount(issues),miss=missingCoverageV31().missingTotal;
+  const people=state.people.filter(roleFunded);
+  const outFund=people.filter(p=>{const t=totalWithCarry(p.id);return t<parseHM(p.min||state.rules.minFund)||t>parseHM(p.max||state.rules.maxFund)}).length;
+  const otMin=state.people.reduce((a,p)=>a+overtimeMinutesV31(p.id),0);
+  const abs=(state.absences||[]).filter(a=>a.from.slice(0,7)<=state.month&&a.to.slice(0,7)>=state.month).length;
+  const tile=(cls,val,lbl,tab)=>`<div class="dashTile ${cls}" data-go="${tab}"><b>${val}</b><span>${lbl}</span></div>`;
+  box.innerHTML=tile(crit?"bad":"good",crit,"závažných problémov","check")+tile(miss?"bad":"good",miss,"nepokrytých miest","repair")+tile(outFund?"warn":"good",outFund,"mimo fondu","summary")+tile("",fmtHM(otMin)+" h","nadčasov v mesiaci","summary")+tile("",abs,"neprítomností v mesiaci","absences");
+  box.querySelectorAll("[data-go]").forEach(t=>t.onclick=()=>activateTab(t.dataset.go));
+}
+const renderAllSkinBase=renderAll;
+renderAll=function(){renderAllSkinBase();renderDashV60()};
+/* hook pre automatické testy */
+window.__planovac={get state(){return state},set state(v){state=v},
+  api:{validateAll:()=>validateAll(),personAvailable:(...a)=>personAvailable(...a),candidateCheck:(...a)=>candidateCheckV31(...a),setCell:(...a)=>setCell(...a),getCell:(...a)=>getCell(...a),
+  renderAll:()=>renderAll(),newMonth:()=>newMonth(),totalWithCarry:id=>totalWithCarry(id),totalWorkMinutes:id=>totalWorkMinutes(id),generatePlan:()=>generatePlan(),undo:()=>undo(),
+  fmtHM:m=>fmtHM(m),minutesOverlapMonth:(d,c)=>minutesOverlapMonth(d,c),syncControls:()=>syncControls(),passesRolling:(p,iv)=>passesRolling(p,iv),entryInterval:(d,c)=>entryInterval(d,c),
+  addOvertime:(...a)=>addOvertimeV31(...a),enterAbsence:(...a)=>enterAbsenceV60(...a),runRepair:o=>runRepairV60(o),applyVariant:i=>applyVariantV60(repairCtxV60.variants[i]),repairCtx:()=>repairCtxV60,
+  missing:()=>missingCoverageV31(),saveState:()=>saveState(),importState:(t)=>importStateV60(t),consecutiveViolations:p=>consecutiveViolations(p),monthStart:()=>monthStart(),setPersonCarry:(pid,c)=>{person(pid).carry=c}}};
+/* ===== v60 END ===== */
 
 ensureV13Defaults();
 
