@@ -19,3 +19,10 @@ Očakávaný výsledok: `Potvrdených zistení: 12/12`.
 
 Pôvodná aplikácia (`index.html`) v tejto vetve **nie je zmenená**; produkčná verzia vo vetve `main`
 zostáva nedotknutá.
+
+## Aplikácia (Plánovač 6.0)
+
+`index.html` – jeden súbor, otvorí sa dvojklikom v Edge/Chrome, údaje ostávajú v prehliadači.
+Pôvodná verzia je zachovaná v `legacy/planovac-5.0-v47.html`.
+Testy: `node tests/regression.js` (29 testov na fiktívnych údajoch).
+SAP integrácia je zámerne vynechaná (pozri `03-sap-integracia.md`) a doplní sa po zistení, ako SAP funguje.
